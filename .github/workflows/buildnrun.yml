@@ -1,0 +1,25 @@
+name: Build and Run
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build-and-run:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Build native library
+      run: gcc -Wall -Wextra -fPIC -shared sighandler.c -o libsighandler.so
+
+    - name: Build .NET project
+      run: dotnet build --property:Configuration=Release
+
+    - name: Copy shared object file
+      run: cp libsighandler.so bin/Release/net8.0/
+
+    - name: Run .NET project
+      run: ./bin/Release/net8.0/dotnet
+
