@@ -20,6 +20,9 @@ jobs:
     - name: Copy shared object file
       run: cp libsighandler.so bin/Release/net8.0/
 
+    - name: List build contents
+      run: ls -la bin/Release/net8.0/
+
     - name: Run .NET project
       run: ./bin/Release/net8.0/dotnet
 
