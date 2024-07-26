@@ -31,12 +31,15 @@ static void handle_sigsegv(int signum, siginfo_t *info, void *user_context)
 
 int install_signal_handler()
 {
+    printf("Store dotnet runtime handler for signal chain\n");
     // save the dotnet runtime handler
     if (sigaction(SIGSEGV, NULL, &g_previous_handler) == -1) {
+    	printf("Failed to retrieve dotnet runtime handler\n");
         return 1;
     }
 
     // install our own SIGSEGV handler
+    printf("Installing our SIGSEGV handler on top\n");
     sigemptyset(&g_sigaction.sa_mask);
     g_sigaction.sa_sigaction = handle_sigsegv;
     g_sigaction.sa_flags = SA_SIGINFO | SA_ONSTACK;
