@@ -22,7 +22,7 @@ static void invoke_previous_handler(int signum, siginfo_t *info, void *user_cont
 
 static void handle_sigsegv(int signum, siginfo_t *info, void *user_context)
 {
-    printf("SIGSEGV received \xF0\x9F\x91\x8B\n");
+    fprintf(stderr, "SIGSEGV received \xF0\x9F\x91\x8B\n");
 
     // the previous handler is the donet runtime handler 
     // converting this signal into a NullReferenceException
