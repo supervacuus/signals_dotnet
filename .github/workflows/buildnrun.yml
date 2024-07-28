@@ -8,21 +8,22 @@ jobs:
     runs-on: ubuntu-24.04
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-    - name: Build native library
-      run: gcc -Wall -Wextra -fPIC -shared sighandler.c -o libsighandler.so
+      - name: Build native library
+        run: gcc -Wall -Wextra -fPIC -shared sighandler.c -o libsighandler.so
 
-    - name: Build .NET project
-      run: dotnet build --property:Configuration=Release
+      - name: Build .NET project
+        run: dotnet build --property:Configuration=Release
 
-    - name: Copy shared object file
-      run: cp libsighandler.so bin/Release/net8.0/
+      - name: Copy shared object file
+        run: cp libsighandler.so bin/Release/net8.0/
 
-    - name: List build contents
-      run: ls -la bin/Release/net8.0/
+      - name: Run .NET project triggering a SIGSEGV from (native) managed code
+        run: ./bin/Release/net8.0/dotnet
+        continue-on-error: true
 
-    - name: Run .NET project
-      run: ./bin/Release/net8.0/dotnet
-
+      - name: Run .NET project triggering a SIGSEGV from (actual) native code
+        run: ./bin/Release/net8.0/dotnet native-crash
+        continue-on-error: true

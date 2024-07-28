@@ -5,12 +5,36 @@ using System.Runtime.InteropServices;
 
 class Program
 {
-    [DllImport("sighandler", EntryPoint="install_signal_handler")]
-    static extern int install_signal_handler();
+    enum HandlerStrategy
+    {
+        InvokePrev,
+        InvokeDfl,
+    }
+
+    [DllImport("sighandler", EntryPoint = "install_signal_handler")]
+    static extern int install_signal_handler(HandlerStrategy strategy);
+
+    [DllImport("sighandler", EntryPoint = "native_crash")]
+    static extern void native_crash();
+
     static void Main(string[] args)
     {
-	    install_signal_handler();
-	    var s = default(string);
-	    var c = s.Length;
+        var doNativeCrash = args is ["native-crash"];
+
+        if (install_signal_handler(HandlerStrategy.InvokePrev) == 1)
+        {
+            Console.WriteLine("Failed to install signal handler");
+            return;
+        }
+
+        if (doNativeCrash)
+        {
+            native_crash();
+        }
+        else
+        {
+            var s = default(string);
+            var c = s.Length;
+        }
     }
 }
