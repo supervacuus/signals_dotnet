@@ -1,0 +1,27 @@
+name: Build and Run Mono
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-run:
+    runs-on: ubuntu-22.04
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Build native library
+      run: gcc -Wall -Wextra -fPIC -shared sighandler.c -o libsighandler.so
+
+    - name: Build mono project with msbuild
+      run: msbuild /p:Configuration=Release
+
+    - name: Copy shared object file
+      run: cp libsighandler.so bin/Release/
+
+    - name: Run mono project
+      run: mono ./bin/Release/dotnet.exe
