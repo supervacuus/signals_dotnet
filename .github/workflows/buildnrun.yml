@@ -2,6 +2,9 @@ name: Build and Run
 
 on:
   workflow_dispatch:
+  push:
+    branches:
+      - main
 
 jobs:
   build-and-run:
@@ -13,6 +16,9 @@ jobs:
 
       - name: Build native library
         run: gcc -Wall -Wextra -fPIC -shared sighandler.c -o libsighandler.so
+
+      - name: List .NET runtimes
+        run: dotnet --list-runtimes
 
       - name: Build .NET project
         run: dotnet build --property:Configuration=Release
