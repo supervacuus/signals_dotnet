@@ -19,6 +19,10 @@ class Program
 
     static void Main(string[] args)
     {
+        // Ensure we know which environment we run in if we use this for further tests.
+        Console.WriteLine(RuntimeInformation.FrameworkDescription);
+        Console.WriteLine(RuntimeInformation.RuntimeIdentifier);
+        
         var doNativeCrash = args is ["native-crash"];
 
         if (install_signal_handler(HandlerStrategy.InvokePrev) == 1)
